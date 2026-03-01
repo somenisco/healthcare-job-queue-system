@@ -1,0 +1,83 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: jp-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: jobdb
+      MYSQL_USER: jobuser
+      MYSQL_PASSWORD: jobpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: jp-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: jp-api
+    ports:
+      - "8080:8080"
+    environment:
+      Database__ConnectionString: server=mysql;port=3306;database=jobdb;user=jobuser;password=jobpass
+      Redis__ConnectionString: redis:6379
+      Database__AutoMigrateOnStartup: "true"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: jp-worker
+    environment:
+      Database__ConnectionString: server=mysql;port=3306;database=jobdb;user=jobuser;password=jobpass
+      Redis__ConnectionString: redis:6379
+      Database__AutoMigrateOnStartup: "false"
+      Simulation__Enabled: "true"
+      Simulation__RatePerSecond: "3"
+      Simulation__SeedOnStart: "true"
+      Simulation__CleanupOnStart: "true"
+      Simulation__ApiBaseUrl: "http://api:8080"
+      Simulation__DemoScenario: "mixed"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_started
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.UI
+    container_name: jp-ui
+    ports:
+      - "4200:80"
+    depends_on:
+      api:
+        condition: service_started
+
+volumes:
+  mysql_data:

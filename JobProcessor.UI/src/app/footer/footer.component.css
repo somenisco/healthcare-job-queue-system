@@ -1,0 +1,14 @@
+.app-footer {
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: #1f1f1f;
+  color: #cfcfcf;
+  border-top: 1px solid #3a3a3a;
+}
+
+.footer-text {
+  font-size: 13px;
+}

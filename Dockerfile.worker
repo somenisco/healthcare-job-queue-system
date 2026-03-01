@@ -1,0 +1,19 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY JobProcessor.Worker/JobProcessor.Worker.csproj JobProcessor.Worker/
+COPY JobProcessor/JobProcessor.csproj JobProcessor/
+RUN dotnet restore JobProcessor.Worker/JobProcessor.Worker.csproj
+
+COPY . .
+RUN rm -f JobProcessor/appsettings.json JobProcessor/appsettings.Development.json && \
+    dotnet publish JobProcessor.Worker/JobProcessor.Worker.csproj -c Release -o /app/publish /p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+
+ENV DOTNET_ENVIRONMENT=Production
+ENV Database__AutoMigrateOnStartup=false
+
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "JobProcessor.Worker.dll"]

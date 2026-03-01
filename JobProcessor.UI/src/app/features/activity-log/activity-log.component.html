@@ -1,0 +1,24 @@
+<section class="terminal">
+  <div class="terminal-bar">
+    <span class="dot" [ngClass]="isConnected() ? 'green' : 'red'"></span>
+    <span class="dot yellow"></span>
+    <span class="dot green"></span>
+    <span class="title"
+      >activity.log {{ isConnected() ? "(connected)" : "(disconnected)" }}</span
+    >
+  </div>
+
+  <div class="terminal-body">
+    @if (activities().length === 0 && !isLoading) {
+      <div class="log-line">
+        <span class="msg" style="color: #666">Waiting for activity...</span>
+      </div>
+    }
+    @for (activity of activities(); track activity.timestamp) {
+      <div class="log-line">
+        <span class="time">[{{ activity.timestamp | date: "HH:mm:ss" }}]</span>
+        <span class="msg">{{ activity.message }}</span>
+      </div>
+    }
+  </div>
+</section>

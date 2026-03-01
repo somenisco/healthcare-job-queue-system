@@ -1,0 +1,6 @@
+@JobProcessor_HostAddress = http://localhost:5116
+
+GET {{JobProcessor_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

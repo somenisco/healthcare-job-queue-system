@@ -1,0 +1,29 @@
+:host {
+  flex: 1;
+  display: grid;
+  grid-template-rows: 3fr 2fr;
+  gap: 16px;
+  padding: 16px;
+  min-height: 0;
+}
+
+.top-section,
+.bottom-section {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bottom-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  min-height: 0;
+}
+
+.patients-section,
+.activity-section {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}

@@ -1,0 +1,16 @@
+<div class="section-container">
+  <div class="section-header">Patients</div>
+  <div class="grid-wrapper">
+    <ag-grid-angular
+      [rowData]="patients"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [loading]="isLoading"
+      [pagination]="true"
+      [paginationPageSize]="20"
+      [noRowsOverlayComponent]="noRowsOverlayComponent"
+      [noRowsOverlayComponentParams]="noRowsOverlayComponentParams"
+    >
+    </ag-grid-angular>
+  </div>
+</div>

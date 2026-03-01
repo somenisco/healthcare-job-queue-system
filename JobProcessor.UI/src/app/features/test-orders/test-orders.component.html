@@ -1,0 +1,52 @@
+<div class="section-container">
+  <div class="section-header">
+    <h6>Test Orders</h6>
+    <div class="refresh-banner">
+      <button
+        mat-raised-button
+        [matBadge]="'1'"
+        [matBadgeHidden]="!hasNewUpdates()"
+        (click)="refreshPage()"
+      >
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <div class="grid-wrapper">
+    <ag-grid-angular
+      [rowData]="testOrders"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [getRowId]="getRowId"
+      [loading]="isLoading"
+      [pagination]="false"
+      [noRowsOverlayComponent]="noRowsOverlayComponent"
+      [noRowsOverlayComponentParams]="noRowsOverlayComponentParams"
+      [animateRows]="true"
+      (gridReady)="onGridReady($event)"
+    >
+    </ag-grid-angular>
+  </div>
+
+  <div class="primary table-footer" *ngIf="!isLoading && !errorMessage">
+    <div class="count">Total: {{ totalCount }}</div>
+    <mat-paginator
+      [length]="totalCount"
+      [pageSize]="pageSize"
+      [pageIndex]="currentPage() - 1"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onPageChange($event)"
+      [showFirstLastButtons]="true"
+    ></mat-paginator>
+  </div>
+</div>
+
+<div class="state" *ngIf="isLoading">
+  <mat-spinner diameter="34"></mat-spinner>
+  <span>Loading test orders...</span>
+</div>
+
+<div class="state error" *ngIf="!isLoading && errorMessage">
+  {{ errorMessage }}
+</div>

@@ -1,0 +1,10 @@
+:host {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+}
+
+.app-main{
+  display: grid;
+  min-height: 0;
+}

@@ -1,0 +1,11 @@
+.app-header {
+  flex: 0 0 64px;
+  background: #1f1f1f;
+  color: #f3f3f3;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.header-title {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}

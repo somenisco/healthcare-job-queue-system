@@ -1,0 +1,19 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY JobProcessor/JobProcessor.csproj JobProcessor/
+RUN dotnet restore JobProcessor/JobProcessor.csproj
+
+COPY . .
+RUN dotnet publish JobProcessor/JobProcessor.csproj -c Release -o /app/publish /p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+
+ENV DOTNET_ENVIRONMENT=Production
+ENV ASPNETCORE_URLS=http://+:8080
+ENV Database__AutoMigrateOnStartup=true
+EXPOSE 8080
+
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "JobProcessor.dll"]

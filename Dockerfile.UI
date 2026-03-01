@@ -1,0 +1,17 @@
+# --stage=build--
+FROM node:20-alpine AS build
+WORKDIR /app/JobProcessor.UI
+
+COPY JobProcessor.UI/package.json JobProcessor.UI/package-lock.json ./
+RUN npm ci
+
+COPY JobProcessor.UI/ ./
+RUN npm run build -- --configuration production
+
+# --stage=serve--
+FROM nginx:alpine AS final
+
+COPY nginx.ui.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/JobProcessor.UI/dist/job-processor.ui /usr/share/nginx/html
+
+EXPOSE 80

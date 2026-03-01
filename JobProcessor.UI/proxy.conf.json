@@ -1,0 +1,28 @@
+{
+  "/patients": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/samples": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/tests": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/redis": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/activity": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "ws": true
+  }
+}

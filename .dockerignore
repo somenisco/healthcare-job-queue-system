@@ -1,0 +1,46 @@
+# .NET build outputs
+**/bin/
+**/obj/
+**/_build/
+**/_obj/
+
+# IDE/editor
+**/.vs/
+**/.vscode/
+**/.idea/
+*.user
+*.suo
+
+# Node
+**/node_modules/
+**/ClientApp/node_modules/
+**/npm-debug.log
+**/yarn-error.log
+**/pnpm-debug.log
+**/.npm/
+**/.pnpm-store/
+
+# Frontend build artifacts
+**/dist/
+**/build/
+**/.next/
+**/.nuxt/
+**/coverage/
+
+# Test artifacts
+**/TestResults/
+
+# OS / misc
+**/.DS_Store
+**/Thumbs.db
+**/*.log
+
+# Git
+.git
+.gitignore
+
+# Repo-only artifacts not needed in container images
+Assets/
+.github/
+README.md
+*.code-workspace
