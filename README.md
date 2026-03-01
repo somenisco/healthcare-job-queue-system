@@ -12,7 +12,7 @@ Built with .NET 8, EF Core, MySQL, Redis, Angular 18, AG-Grid, and Docker Compos
 ## Demo
 
 - Demo shows live order transitions conditional on first page only and handling updates differently on other pages.
-  <video src="Assets/HealthcareJobQueue.mp4" controls width="900"></video>
+  <video src="https://github.com/user-attachments/assets/803aa428-eec8-4289-8da8-0c52a57f823a" width="900"></video>
 
 ## Project Objective
 
