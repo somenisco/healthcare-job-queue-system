@@ -11,8 +11,8 @@ Built with .NET 8, EF Core, MySQL, Redis, Angular 18, AG-Grid, and Docker Compos
 
 ## Demo
 
-- Video: [HealthcareJobQueue.mp4](Assets/HealthcareJobQueue.mp4)
-- Demo shows live order transitions, retries, and recovery behavior.
+- Demo shows live order transitions conditional on first page only and handling updates differently on other pages.
+  <video src="Assets/HealthcareJobQueue.mp4" controls width="900"></video>
 
 ## Project Objective
 
@@ -42,6 +42,62 @@ flowchart LR
     WORKER --> DB
     WORKER -->|Pub/Sub events| REDIS
     API -->|Subscribe + SSE stream| UI
+```
+
+### Healthcare Job Queue System Architecture
+
+```mermaid
+flowchart LR
+    %% Layered architecture mapped to this project
+    subgraph CLIENT[Client Layer]
+        UI[Angular Web Dashboard]
+        API_CLIENTS[REST API Consumers]
+    end
+
+    subgraph GATEWAY[Gateway Layer]
+        API[ASP.NET Core API]
+        SSE[/SSE Endpoints<br/>/tests/stream<br/>/activity/stream/]
+    end
+
+    subgraph APP[Application Layer]
+        CTRL[Controllers<br/>Tests/Samples/Patients]
+        EVENT_SVC[TestOrderEventService]
+        LOG_SVC[ActivityLogService]
+    end
+
+    subgraph EXEC[Execution Layer]
+        IMMEDIATE_Q[Redis LIST<br/>queue:test_orders]
+        SCHEDULED_Q[Redis ZSET<br/>queue:scheduled_test_orders]
+        WORKER[JobWorker + TestOrderProcessor]
+    end
+
+    subgraph STORAGE[Storage Layer]
+        MYSQL[(MySQL<br/>Source of Truth)]
+        REDIS[(Redis<br/>Queue + Pub/Sub)]
+    end
+
+    UI --> API
+    API_CLIENTS --> API
+    API --> SSE
+    API --> CTRL
+    CTRL --> MYSQL
+    CTRL --> IMMEDIATE_Q
+    CTRL --> SCHEDULED_Q
+    CTRL --> EVENT_SVC
+    CTRL --> LOG_SVC
+
+    WORKER --> IMMEDIATE_Q
+    WORKER --> SCHEDULED_Q
+    WORKER --> MYSQL
+    WORKER --> EVENT_SVC
+    WORKER --> LOG_SVC
+
+    IMMEDIATE_Q --> REDIS
+    SCHEDULED_Q --> REDIS
+    EVENT_SVC --> REDIS
+    LOG_SVC --> REDIS
+    REDIS --> SSE
+    SSE --> UI
 ```
 
 ## End-to-End Flow
